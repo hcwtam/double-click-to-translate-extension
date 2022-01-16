@@ -12,7 +12,10 @@
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["index.js"]
+      "js": ["./dist/main.js"]
     }
+  ],
+  "permissions": [
+    "*://*/*"
   ]
 }
