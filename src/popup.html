@@ -1,20 +1,44 @@
+<!DOCTYPE html>
+
 <html>
   <head>
+    <title>Double-click to Translate</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="popup.css" />
   </head>
 
   <body>
     <div id="popup-content">
-      <div class="container">
-        <div class="switch-holder">
-          <div class="switch-label">TURNED</div>
-          <div class="switch-toggle">
-            <input type="checkbox" id="bluetooth" />
-            <label for="switch-toggle"></label>
-          </div>
+      <div class="power-switch">
+        <input type="checkbox" id="power-checkbox" />
+        <div class="button">
+          <svg class="power-off">
+            <use xlink:href="#line" class="line" />
+            <use xlink:href="#circle" class="circle" />
+          </svg>
+          <svg class="power-on">
+            <use xlink:href="#line" class="line" />
+            <use xlink:href="#circle" class="circle" />
+          </svg>
         </div>
       </div>
+      <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+        <symbol
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 150 150"
+          id="line"
+        >
+          <line x1="75" y1="34" x2="75" y2="58" />
+        </symbol>
+        <symbol
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 150 150"
+          id="circle"
+        >
+          <circle cx="75" cy="80" r="35" />
+        </symbol>
+      </svg>
+
       <select name="from" id="from-select">
         <option value="">--Please choose an option--</option>
         <option value="dog">Dog</option>
@@ -27,6 +51,9 @@
         <option value="cat">Cat</option>
         <option value="hamster">Hamster</option>
       </select>
+    </div>
+    <div id="error-content" class="hidden">
+      <p>Error loading plugin.</p>
     </div>
     <script src="popup.js"></script>
   </body>

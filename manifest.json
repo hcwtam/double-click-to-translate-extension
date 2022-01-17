@@ -1,12 +1,13 @@
 {
   "manifest_version": 2,
-  "name": "Borderify",
+  "name": "double-click-to-translate-extension",
   "version": "1.0",
 
-  "description": "Adds a red border to all webpages matching mozilla.org.",
+  "description": "Translate any word or sentences by double clicking",
 
   "icons": {
-    "48": "dist/logo.svg"
+    "48": "dist/logo.svg",
+    "96": "dist/logo.svg"
   },
 
   "content_scripts": [
@@ -15,7 +16,15 @@
       "js": ["./dist/main.js"]
     }
   ],
-  "permissions": [
-    "*://*/*"
-  ]
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "hcwtam@gmail.com"
+    }
+  },
+  "browser_action": {
+    "default_icon": "dist/logo.svg",
+    "default_title": "Double-click to Translate",
+    "default_popup": "src/popup.html"
+  },
+  "permissions": ["storage"]
 }
