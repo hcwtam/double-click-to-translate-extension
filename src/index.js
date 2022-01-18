@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const turnedOn = false;
+
 const styles = {
   backgroundColor: "#111",
   color: "#fff",
@@ -11,18 +13,27 @@ function setStyle(element) {
   for (let key in styles) {
     element.style[key] = styles[key];
   }
-};
+}
 
 async function getTranslation(text, targetLanguage) {
-  const res = await axios.post("https://translation.googleapis.com/language/translate/v2?key=KEY", {
-    q: text,
-    target: targetLanguage,
-  }).catch(e => {console.log(e);});
+  const res = await axios
+    .post(
+      "https://translation.googleapis.com/language/translate/v2?key=KEY",
+      {
+        q: text,
+        target: targetLanguage,
+      }
+    )
+    .catch((e) => {
+      console.log(e);
+    });
   return res.data.data.translations[0].translatedText; // res.data.data.translations[0] = { translatedText: "Hallo", detectedSourceLanguage: "en" }
 }
 
 function removeTranslateElement() {
-  const translateElements = document.getElementsByClassName("translation-element");
+  const translateElements = document.getElementsByClassName(
+    "translation-element"
+  );
   if (translateElements.length > 0) translateElements[0].remove();
 }
 
@@ -49,6 +60,11 @@ async function doubleClickToTranslate(event) {
     translationElement.textContent = translatedText;
     parent.insertBefore(translationElement, selectedElement);
   }
-};
+}
 
 document.addEventListener("mouseup", doubleClickToTranslate);
+document.removeEventListener("mouseup", doubleClickToTranslate);
+
+browser.runtime.onMessage.addListener((message) => {
+
+});

@@ -26,5 +26,5 @@
     "default_title": "Double-click to Translate",
     "default_popup": "src/popup.html"
   },
-  "permissions": ["storage"]
+  "permissions": ["storage", "*://*/*"]
 }
