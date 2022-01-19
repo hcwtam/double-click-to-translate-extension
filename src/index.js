@@ -1,13 +1,15 @@
 import axios from "axios";
 
-let turnedOn = true;
-
 const styles = {
   backgroundColor: "#111",
   color: "#fff",
   padding: "10px",
   position: "absolute",
 };
+
+// states
+let srcLang = "detect";
+let destLang = "zh-TW";
 
 function setStyle(element) {
   for (let key in styles) {
@@ -56,19 +58,35 @@ async function doubleClickToTranslate(event) {
     setStyle(translationElement);
     translationElement.style.left = selectionRect.left.toString() + "px";
     translationElement.style.top = (selectionRect.top - 45).toString() + "px";
-    const translatedText = await getTranslation(selectedString, "zh-TW");
+    const translatedText = await getTranslation(selectedString, destLang);
     translationElement.textContent = translatedText;
     parent.insertBefore(translationElement, selectedElement);
   }
 }
 
 browser.runtime.onMessage.addListener((message) => {
-  if (message.turnedOn) {
-    document.addEventListener("mouseup", doubleClickToTranslate);
-    return Promise.resolve(true);
-  } else {
+  if (message.command === "power") {
+    if (message.turnedOn) {
+      document.addEventListener("mouseup", doubleClickToTranslate);
+      return Promise.resolve(true);
+    }
+    if (!message.turnedOn) {
+      document.removeEventListener("mouseup", doubleClickToTranslate);
+      return Promise.resolve(true);
+    }
+  }
+  if (message.command === "srcLang") {
     document.removeEventListener("mouseup", doubleClickToTranslate);
+    srcLang = message.srcLang;
+    document.addEventListener("mouseup", doubleClickToTranslate);
+
     return Promise.resolve(true);
   }
-  return false;
+  if (message.command === "destLang") {
+    document.removeEventListener("mouseup", doubleClickToTranslate);
+    destLang = message.destLang;
+    document.addEventListener("mouseup", doubleClickToTranslate);
+    return Promise.resolve(true);
+  }
+  return Promise.resolve(false);
 });

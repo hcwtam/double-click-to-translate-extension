@@ -16,6 +16,11 @@ body {
   margin: 0;
 }
 
+select {
+  z-index: 1;
+  text-transform: capitalize;
+}
+
 #popup-content {
   width: 100%;
   height: 100%;
