@@ -1,9 +1,21 @@
 const checkbox = document.getElementById("power-checkbox");
-browser.storage.local.get("doubleClickTranslate", function(result) {checkbox.checked = result.doubleClickTranslate});
-
-checkbox.addEventListener("click", async () => {
-    await browser.storage.local.set({ doubleClickTranslate: checkbox.checked });
-    await browser.tabs.sendMessage(tabs[0].id, { turnedOn: checkbox.checked });
+browser.storage.local.get("doubleClickTranslate", function (result) {
+  checkbox.checked = result.doubleClickTranslate;
 });
 
-browser.tabs.sendMessage(tabs[0].id, { turnedOn: checkbox.checked });
+checkbox.addEventListener("click", async () => {
+  await browser.storage.local.set({ doubleClickTranslate: checkbox.checked });
+  const tabs = await browser.tabs
+    .query({ active: true, currentWindow: true })
+    .catch((e) => {
+      console.log(e);
+    });
+
+  for (const tab of tabs)
+    await browser.tabs.sendMessage(tab.id, { turnedOn: checkbox.checked });
+});
+
+browser.tabs.query({ active: true, currentWindow: true }).then(async (tabs) => {
+  for (const tab of tabs)
+    await browser.tabs.sendMessage(tab.id, { turnedOn: checkbox.checked });
+});

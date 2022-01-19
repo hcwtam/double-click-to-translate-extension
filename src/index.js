@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const turnedOn = false;
+let turnedOn = true;
 
 const styles = {
   backgroundColor: "#111",
@@ -62,9 +62,13 @@ async function doubleClickToTranslate(event) {
   }
 }
 
-document.addEventListener("mouseup", doubleClickToTranslate);
-document.removeEventListener("mouseup", doubleClickToTranslate);
-
 browser.runtime.onMessage.addListener((message) => {
-
+  if (message.turnedOn) {
+    document.addEventListener("mouseup", doubleClickToTranslate);
+    return Promise.resolve(true);
+  } else {
+    document.removeEventListener("mouseup", doubleClickToTranslate);
+    return Promise.resolve(true);
+  }
+  return false;
 });
