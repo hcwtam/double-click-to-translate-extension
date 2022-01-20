@@ -113,23 +113,31 @@ const checkbox = document.getElementById("power-checkbox");
 const srcDropdown = document.getElementById("from-select");
 const destDropdown = document.getElementById("to-select");
 
-browser.storage.local.get("doubleClickTranslate", function (result) {
+let power;
+
+browser.storage.local.get("doubleClickTranslate", async function (result) {
+  if (result.doubleClickTranslate === undefined) {
+    checkbox.checked = true;
+    power = true;
+    await browser.storage.local.set({ doubleClickTranslate: true });
+    return Promise.resolve(true);
+  }
   checkbox.checked = result.doubleClickTranslate;
+  power = result.doubleClickTranslate;
+  return Promise.resolve(true);
 });
-
-srcDropdown.value = "detect";
-destDropdown.value = "zh-TW";
-
 
 browser.storage.local.get("srcLang", function (result) {
   if (result.srcLang) {
     srcDropdown.value = result.srcLang;
+    return Promise.resolve(true);
   }
 });
 
 browser.storage.local.get("destLang", function (result) {
   if (result.destLang) {
     destDropdown.value = result.destLang;
+    return Promise.resolve(true);
   }
 });
 
@@ -151,6 +159,9 @@ for (let lang in LANGUAGES) {
   destDropdown.appendChild(destOption);
 }
 
+srcDropdown.value = "detect";
+destDropdown.value = "zh-TW";
+
 checkbox.addEventListener("click", async () => {
   await browser.storage.local.set({ doubleClickTranslate: checkbox.checked });
   const tabs = await browser.tabs
@@ -160,7 +171,10 @@ checkbox.addEventListener("click", async () => {
     });
 
   for (const tab of tabs)
-    await browser.tabs.sendMessage(tab.id, { command: "power", turnedOn: checkbox.checked });
+    await browser.tabs.sendMessage(tab.id, {
+      command: "power",
+      turnedOn: checkbox.checked,
+    });
 });
 
 srcDropdown.addEventListener("change", async () => {
@@ -172,7 +186,10 @@ srcDropdown.addEventListener("change", async () => {
     });
 
   for (const tab of tabs)
-    await browser.tabs.sendMessage(tab.id, { command: "srcLang", srcLang: srcDropdown.value });
+    await browser.tabs.sendMessage(tab.id, {
+      command: "srcLang",
+      srcLang: srcDropdown.value,
+    });
 });
 
 destDropdown.addEventListener("change", async () => {
@@ -184,10 +201,16 @@ destDropdown.addEventListener("change", async () => {
     });
 
   for (const tab of tabs)
-    await browser.tabs.sendMessage(tab.id, { command: "destLang", destLang: destDropdown.value });
+    await browser.tabs.sendMessage(tab.id, {
+      command: "destLang",
+      destLang: destDropdown.value,
+    });
 });
 
 browser.tabs.query({ active: true, currentWindow: true }).then(async (tabs) => {
   for (const tab of tabs)
-    await browser.tabs.sendMessage(tab.id, { command: "power", turnedOn: checkbox.checked });
+    await browser.tabs.sendMessage(tab.id, {
+      command: "power",
+      turnedOn: power,
+    });
 });
