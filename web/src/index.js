@@ -26,18 +26,15 @@ function setStyle(element) {
 
 async function getTranslation(text, sourceLanguage, targetLanguage) {
   const res = await axios
-    .post(
-      "https://translation.googleapis.com/language/translate/v2?key=KEY",
-      {
-        q: text,
-        target: targetLanguage,
-        ...(sourceLanguage !== "detect" && { source: sourceLanguage }),
-      }
-    )
+    .post("http://localhost:8080/translate", {
+      text,
+      target: targetLanguage,
+      source: sourceLanguage,
+    })
     .catch((e) => {
       console.log(e);
     });
-  return res.data.data.translations[0].translatedText; // res.data.data.translations[0] = { translatedText: "Hallo", detectedSourceLanguage: "en" }
+  return res.data.translatedText;
 }
 
 function removeTranslateElement() {
