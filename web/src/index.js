@@ -26,7 +26,7 @@ function setStyle(element) {
 
 async function getTranslation(text, sourceLanguage, targetLanguage) {
   const res = await axios
-    .post("http://localhost:8080/translate", {
+    .post("https://translate.wesleytam.xyz/translate", {
       text,
       target: targetLanguage,
       source: sourceLanguage,
