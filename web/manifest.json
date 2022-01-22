@@ -4,6 +4,7 @@
   "version": "1.0",
 
   "description": "Translate any word or sentences by double clicking",
+  "homepage_url": "https://github.com/hcwtam/double-click-to-translate-extension/tree/master/web",
 
   "icons": {
     "48": "dist/logo.svg",
